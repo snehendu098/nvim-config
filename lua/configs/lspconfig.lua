@@ -9,6 +9,7 @@ local servers = {
   "cssls", -- CSS,
   "gopls", -- go
   "clangd",
+  "prisma",
 }
 
 -- Enable all basic servers
