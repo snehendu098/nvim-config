@@ -13,9 +13,6 @@ local options = {
     yaml = { "prettier" },
     markdown = { "prettier" },
 
-    -- prisma
-    prisma = { "prisma" },
-
     -- python
     python = { "black" },
 
@@ -25,6 +22,8 @@ local options = {
     -- c/cpp
     c = { "clang_format" }, -- ADD THIS
     cpp = { "clang_format" },
+
+    rust = { "rustfmt" }, -- ADD THIS
   },
 
   format_on_save = {

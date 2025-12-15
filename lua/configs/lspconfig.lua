@@ -10,10 +10,67 @@ local servers = {
   "gopls", -- go
   "clangd",
   "prisma",
+  "rust-analyzer",
 }
 
 -- Enable all basic servers
 vim.lsp.enable(servers)
+
+-- Enhanced rust-analyzer configuration (optional but recommended)
+vim.lsp.config("rust_analyzer", {
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true,
+        loadOutDirsFromCheck = true,
+        buildScripts = {
+          enable = true,
+        },
+      },
+      checkOnSave = {
+        command = "clippy", -- Use clippy for better lints
+      },
+      procMacro = {
+        enable = true,
+      },
+      diagnostics = {
+        enable = true,
+        experimental = {
+          enable = true,
+        },
+      },
+      hover = {
+        actions = {
+          enable = true,
+          references = {
+            enable = true,
+          },
+        },
+      },
+      inlayHints = {
+        enable = true,
+        chainingHints = {
+          enable = true,
+        },
+        closingBraceHints = {
+          enable = true,
+          minLines = 25,
+        },
+        closureReturnTypeHints = {
+          enable = "always",
+        },
+        parameterHints = {
+          enable = true,
+        },
+        typeHints = {
+          enable = true,
+        },
+      },
+    },
+  },
+})
+
+vim.lsp.enable "rust_analyzer"
 
 vim.lsp.config("prisma", {
   cmd = { "prisma-language-server", "--stdio" },
