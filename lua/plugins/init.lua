@@ -198,4 +198,23 @@ return {
     lazy = false,
     opts = {},
   },
+
+  {
+    "linux-cultist/venv-selector.nvim",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    lazy = false, -- Load immediately, not lazy
+    branch = "regexp", -- Use the regexp branch
+    config = function()
+      require("venv-selector").setup {
+        auto_refresh = true,
+      }
+    end,
+    keys = {
+      { "<leader>vs", "<cmd>VenvSelect<cr>", desc = "Select VirtualEnv" },
+    },
+  },
 }

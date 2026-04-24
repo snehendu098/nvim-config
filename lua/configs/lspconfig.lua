@@ -10,64 +10,64 @@ local servers = {
   "gopls", -- go
   "clangd",
   "prisma",
-  "rust-analyzer",
+  "rust_analyzer",
 }
 
 -- Enable all basic servers
 vim.lsp.enable(servers)
 
 -- Enhanced rust-analyzer configuration (optional but recommended)
-vim.lsp.config("rust_analyzer", {
-  settings = {
+-- Project-aware: Anchor/Solana projects get `idl-build` feature,
+-- everything else (foundry, generic Rust) gets all features.
+-- Switching projects in one session: run `:LspRestart` to re-evaluate.
+local function rust_analyzer_settings()
+  local bufname = vim.api.nvim_buf_get_name(0)
+  local start = bufname ~= "" and vim.fs.dirname(bufname) or vim.fn.getcwd()
+  local anchor_root = vim.fs.find({ "Anchor.toml" }, { upward = true, path = start })[1]
+
+  local cargo_cfg = {
+    buildScripts = { enable = true },
+    loadOutDirsFromCheck = true,
+  }
+
+  if anchor_root then
+    cargo_cfg.features = { "idl-build" }
+  else
+    cargo_cfg.allFeatures = true
+  end
+
+  return {
     ["rust-analyzer"] = {
-      cargo = {
-        allFeatures = true,
-        loadOutDirsFromCheck = true,
-        buildScripts = {
-          enable = true,
-        },
-      },
-      checkOnSave = {
-        command = "clippy", -- Use clippy for better lints
-      },
-      procMacro = {
-        enable = true,
-      },
+      cargo = cargo_cfg,
+      checkOnSave = true,
+      check = { command = "clippy" },
+      procMacro = { enable = true },
       diagnostics = {
         enable = true,
-        experimental = {
-          enable = true,
-        },
+        experimental = { enable = true },
+        disabled = { "unresolved-proc-macro" },
       },
       hover = {
         actions = {
           enable = true,
-          references = {
-            enable = true,
-          },
+          references = { enable = true },
         },
       },
       inlayHints = {
         enable = true,
-        chainingHints = {
-          enable = true,
-        },
-        closingBraceHints = {
-          enable = true,
-          minLines = 25,
-        },
-        closureReturnTypeHints = {
-          enable = "always",
-        },
-        parameterHints = {
-          enable = true,
-        },
-        typeHints = {
-          enable = true,
-        },
+        chainingHints = { enable = true },
+        closingBraceHints = { enable = true, minLines = 25 },
+        closureReturnTypeHints = { enable = "always" },
+        parameterHints = { enable = true },
+        typeHints = { enable = true },
       },
     },
-  },
+  }
+end
+
+vim.lsp.config("rust_analyzer", {
+  cmd = { "rustup", "run", "stable", "rust-analyzer" },
+  settings = rust_analyzer_settings(),
 })
 
 vim.lsp.enable "rust_analyzer"
