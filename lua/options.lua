@@ -11,3 +11,11 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 })
 
 -- o.cursorlineopt ='both' -- to enable cursorline!
+
+vim.filetype.add {
+  extension = {
+    tf = "terraform",
+    tfvars = "terraform-vars",
+    hcl = "hcl",
+  },
+}
