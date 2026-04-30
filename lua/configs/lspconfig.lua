@@ -11,10 +11,60 @@ local servers = {
   "clangd",
   "prisma",
   "rust_analyzer",
+  "dockerls", -- Dockerfile
+  "bashls", -- Shell scripts
+  "yamlls", -- Kubernetes/YAML
+  "terraformls", -- Terraform
 }
 
 -- Enable all basic servers
 vim.lsp.enable(servers)
+
+-- Enhanced Kubernetes YAML configuration
+vim.lsp.config("yamlls", {
+  settings = {
+    yaml = {
+      schemas = {
+        kubernetes = "*.yaml",
+        ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+        ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+        ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+        ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+        ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+        ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+        ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
+        ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+      },
+      format = { enable = true },
+      validate = true,
+      completion = true,
+      hover = true,
+    },
+  },
+})
+
+vim.lsp.enable "yamlls"
+
+-- Terraform configuration
+vim.lsp.config("terraformls", {
+  cmd = { "terraform-ls", "serve" },
+  filetypes = { "terraform", "tf", "terraform-vars" },
+})
+
+vim.lsp.enable "terraformls"
+
+-- Bash LSP configuration
+vim.lsp.config("bashls", {
+  filetypes = { "sh", "bash", "zsh" },
+})
+
+vim.lsp.enable "bashls"
+
+-- Dockerfile LSP
+vim.lsp.enable "dockerls"
 
 -- Enhanced rust-analyzer configuration (optional but recommended)
 -- Project-aware: Anchor/Solana projects get `idl-build` feature,
